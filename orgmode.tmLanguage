@@ -54,6 +54,14 @@
 			<key>match</key>
 			<string>\[\[(.+)\]\]</string>
 		</dict>
+		<dict>
+			<key>contentName</key>
+			<string>text source</string>
+			<key>begin</key>
+			<string>\[code\]\s*</string>
+			<key>end</key>
+			<string>\s*\[/code\]</string>
+		</dict>
 	</array>
 	<key>scopeName</key>
 	<string>text.orgmode</string>
