@@ -9,7 +9,7 @@ import sublime_plugin
 OPEN_LINK_COMMAND = ['open']
 
 
-class OrgmodeOpenLink(sublime_plugin.TextCommand):
+class OrgmodeOpenLinkCommand(sublime_plugin.TextCommand):
     '''
     @todo: If the link is a local org-file open it via sublime, otherwise use OPEN_LINK_COMMAND.
     @todo: Implement mechanisms for Linux and Windows.
@@ -34,10 +34,11 @@ class OrgmodeOpenLink(sublime_plugin.TextCommand):
             if stderr:
                 sublime.error_message(stderr)
 
-class OrgmodeToggleCheckbox(sublime_plugin.TextCommand):
+
+class AbstractCheckboxCommand(sublime_plugin.TextCommand):
 
     def __init__(self, *args, **kwargs):
-        super(OrgmodeToggleCheckbox, self).__init__(*args, **kwargs)
+        super(AbstractCheckboxCommand, self).__init__(*args, **kwargs)
         indent_pattern = r'^(\s*).*$'
         summary_pattern = r'(\[\d*[/]\d*\])'
         self.indent_regex = re.compile(indent_pattern)
@@ -70,6 +71,33 @@ class OrgmodeToggleCheckbox(sublime_plugin.TextCommand):
                     found = True
                     break
             row -= 1
+        if found:
+            # print row
+            point = view.text_point(row, 0)
+            line = view.line(point)
+            return line
+
+    def find_child(self, region):
+        view = self.view
+        row, col = view.rowcol(region.begin())
+        line = view.line(region)
+        content = view.substr(line)
+        # print content
+        indent = self.get_indent(content)
+        # print repr(indent)
+        row += 1
+        found = False
+        last_row, _ = view.rowcol(view.size())
+        while row <= last_row:
+            point = view.text_point(row, 0)
+            line = view.line(point)
+            content = view.substr(line)
+            if len(content.strip()):
+                cur_indent = self.get_indent(content)
+                if len(cur_indent) > len(indent):
+                    found = True
+                    break
+            row += 1
         if found:
             # print row
             point = view.text_point(row, 0)
@@ -118,6 +146,23 @@ class OrgmodeToggleCheckbox(sublime_plugin.TextCommand):
             view.text_point(row, col_stop),
         )
 
+    def recalc_summary(self, edit, parent, child):
+        view = self.view
+        # print parent, child
+        summary = self.get_summary(parent)
+        if not summary:
+            return False
+        children = self.find_siblings(view.line(child), parent)
+        # print children
+        num_children = len(children)
+        checked_children = len(filter(lambda child: '[X]' in child[1], children))
+        # print checked_children, num_children
+        view.replace(edit, summary, '[%d/%d]' % (checked_children, num_children))
+        return True
+
+
+class OrgmodeToggleCheckboxCommand(AbstractCheckboxCommand):
+
     def run(self, edit):
         view = self.view
         backup = []
@@ -125,25 +170,35 @@ class OrgmodeToggleCheckbox(sublime_plugin.TextCommand):
             if 'checkbox.orgmode' not in view.scope_name(sel.end()):
                 continue
             backup.append(sel)
-            region = view.extract_scope(sel.end())
-            content = view.substr(region)
+            child = view.extract_scope(sel.end())
+            content = view.substr(child)
             if '[X]' in content:
                 content = content.replace('[X]', '[ ]')
             elif '[ ]' in content:
                 content = content.replace('[ ]', '[X]')
-            view.replace(edit, region, content)
-            parent = self.find_parent(region)
+            view.replace(edit, child, content)
+            parent = self.find_parent(child)
             if parent:
-                # print parent, region
-                summary = self.get_summary(parent)
-                if not summary:
-                    continue
-                children = self.find_siblings(view.line(region), parent)
-                # print children
-                num_children = len(children)
-                checked_children = len(filter(lambda child: '[X]' in child[1], children))
-                # print checked_children, num_children
-                view.replace(edit, summary, '[%d/%d]' % (checked_children, num_children))
+                self.recalc_summary(edit, parent, child)
+        view.sel().clear()
+        for region in backup:
+            view.sel().add(region)
+
+
+class OrgmodeRecalcCheckboxSummaryCommand(AbstractCheckboxCommand):
+
+    def run(self, edit):
+        view = self.view
+        backup = []
+        for sel in view.sel():
+            if 'summary.checkbox.orgmode' not in view.scope_name(sel.end()):
+                continue
+            backup.append(sel)
+            summary = view.extract_scope(sel.end())
+            parent = view.line(summary)
+            child = self.find_child(parent)
+            if child:
+                self.recalc_summary(edit, parent, child)
         view.sel().clear()
         for region in backup:
             view.sel().add(region)
