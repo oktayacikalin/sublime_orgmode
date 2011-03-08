@@ -1,0 +1,50 @@
+
+orgmode for Sublime Text 2
+==========================
+
+* About
+
+  My shot on bringing Org-Mode {3} to Sublime Text 2 {4}. This project is still in very early development. Nobody knows what will come next :). This won't be a simple copycat of the original one. I want to "port" useful things in a way that works best for Sublime Text 2. So there may be things that aren't in either version or just behave more or less differently.
+
+* Features
+
+  Here's a list of all the features implemented so far:
+
+  - Context sensitive highlighting
+    - Headlines
+    - Pages
+    - Breaks
+    - tacks
+    - Checkboxes
+    - Checkbox summaries
+    - External links
+  - Context sensitive actions
+    - Toggle checkbox on pressing enter
+    - Auto update of checkbox summary on toggle of checkboxes
+    - External link opener on pressing enter
+      (currently only working on OSX)
+
+* Todo [0/5]
+
+  - [ ] External link opener on pressing enter [1/3]
+    - [X] on OSX
+    - [ ] on Linux
+    - [ ] on Windows
+  - [ ] Recalc number of children in checkbox summary on pressing enter.
+  - [ ] When (un-)checking *all* checkboxes of siblings, toggle parent checkbox.
+  - [ ] Either make highlight_code_remarks.py configurable thru view settings so that orgmode can control its regex patterns or fork/extend it to archive an equal goal.
+  - [ ] Inter-document links
+    - [ ] Highlighting
+    - [ ] Jump between similar numbers on pressing enter
+
+* Known Issues
+
+  - When creating an empty checkbox summary and hitting an checkbox below the cursor will be placed a little bit to the left. Seems like the selection is being rebuilt incorrectly due to the added chars for the summary.
+  - Subsequent indent of wrapped paragraphs don't respect stars, tacks and checkboxes.
+  
+* External links
+
+  {1} Homepage [[https://bitbucket.org/theblacklion/sublime_orgmode/]]
+  {2} Issue tracker [[https://bitbucket.org/theblacklion/sublime_orgmode/issues?status=new&status=open]]
+  {3} Sublime Text 2 [[http://www.sublimetext.com/2]]
+  {4} Org-Mode for Emacs [[http://orgmode.org/]]

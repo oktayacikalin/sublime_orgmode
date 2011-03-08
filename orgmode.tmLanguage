@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fileTypes</key>
+	<array>
+		<string>org</string>
+	</array>
+	<key>keyEquivalent</key>
+	<string>^~P</string>
+	<key>name</key>
+	<string>orgmode</string>
+	<key>patterns</key>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>page.orgmode</string>
+			<key>match</key>
+			<string>^(\-\-\-) .*\n?$</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>break.orgmode</string>
+			<key>match</key>
+			<string>^(\~)+ .*\n?$</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>headline.orgmode</string>
+			<key>match</key>
+			<string>^\s*(\*)+ [^\[\]]*</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>tack.orgmode</string>
+			<key>match</key>
+			<string>^\s*(\-) </string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>checkbox.orgmode</string>
+			<key>match</key>
+			<string>(\[[xX ]\])\s?</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>summary.checkbox.orgmode</string>
+			<key>match</key>
+			<string>(\[\d*[/]\d*\])</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>link.orgmode</string>
+			<key>match</key>
+			<string>\[\[(.+)\]\]</string>
+		</dict>
+	</array>
+	<key>scopeName</key>
+	<string>text.orgmode</string>
+	<key>uuid</key>
+	<string>D0287542-2284-452C-8648-B885B3E16B6F</string>
+</dict>
+</plist>
