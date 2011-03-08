@@ -12,20 +12,21 @@ orgmode for Sublime Text 2
     - Headlines
     - Pages
     - Breaks
-    - tacks
+    - Tacks
     - Checkboxes
     - Checkbox summaries
     - External links
   - Context sensitive actions
     - Toggle checkbox on pressing enter
     - Auto update of checkbox summary on toggle of checkboxes
+    - Recalc number of children in checkbox summary on pressing enter
     - External link opener on pressing enter
       (currently only working on OSX)
 
 * Installation
 
 ** Codebase
-   Clone or copy the contents into an Packages/orgmode folder.
+   Clone or copy the contents into a Packages/orgmode folder.
 
 ** Key bindings for interaction
    See "Key bindings for interaction" under "Attachments" below for details.
