@@ -14,45 +14,51 @@
 	<array>
 		<dict>
 			<key>name</key>
-			<string>page.orgmode</string>
+			<string>orgmode.page</string>
 			<key>match</key>
 			<string>^(\-\-\-) .*\n?$</string>
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>break.orgmode</string>
+			<string>orgmode.break</string>
 			<key>match</key>
 			<string>^(\~)+ .*\n?$</string>
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>headline.orgmode</string>
+			<string>orgmode.headline</string>
 			<key>match</key>
 			<string>^\s*(\*)+ [^\[\]]*</string>
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>tack.orgmode</string>
+			<string>orgmode.tack</string>
 			<key>match</key>
 			<string>^\s*(\-) </string>
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>checkbox.orgmode</string>
+			<string>orgmode.checkbox</string>
 			<key>match</key>
 			<string>(\[[xX ]\])\s?</string>
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>summary.checkbox.orgmode</string>
+			<string>orgmode.checkbox.summary</string>
 			<key>match</key>
 			<string>(\[\d*[/]\d*\])</string>
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>link.orgmode</string>
+			<string>orgmode.link</string>
 			<key>match</key>
 			<string>\[\[(.+)\]\]</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>orgmode.link.internal</string>
+			<key>match</key>
+			<string>\{(\d+)\}</string>
 		</dict>
 		<dict>
 			<key>contentName</key>

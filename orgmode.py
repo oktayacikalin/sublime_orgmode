@@ -18,7 +18,7 @@ class OrgmodeOpenLinkCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         view = self.view
         for sel in view.sel():
-            if 'link.orgmode' not in view.scope_name(sel.end()):
+            if 'orgmode.link' not in view.scope_name(sel.end()):
                 continue
             region = view.extract_scope(sel.end())
             content = view.substr(region)
@@ -33,6 +33,32 @@ class OrgmodeOpenLinkCommand(sublime_plugin.TextCommand):
                 sublime.status_message(stdout)
             if stderr:
                 sublime.error_message(stderr)
+
+
+class OrgmodeCycleInternalLinkCommand(sublime_plugin.TextCommand):
+
+    def run(self, edit):
+        view = self.view
+        sels = view.sel()
+        sel = sels[0]
+        if 'orgmode.link.internal' not in view.scope_name(sel.end()):
+            return
+        region = view.extract_scope(sel.end())
+        content = view.substr(region).strip()
+        found = self.view.find(content, region.end(), sublime.LITERAL)
+        if not found:  # Try wrapping around buffer.
+            found = self.view.find(content, 0, sublime.LITERAL)
+        same = region.a == found.a and region.b == found.b
+        if not found or same:
+            sublime.status_message('No sibling found for: %s' % content)
+            return
+        sels.clear()
+        sels.add(sublime.Region(found.begin()))
+        try:
+            import show_at_center_and_blink
+            view.run_command('show_at_center_and_blink')
+        except ImportError:
+            view.show_at_center(found)
 
 
 class AbstractCheckboxCommand(sublime_plugin.TextCommand):
@@ -167,7 +193,7 @@ class OrgmodeToggleCheckboxCommand(AbstractCheckboxCommand):
         view = self.view
         backup = []
         for sel in view.sel():
-            if 'checkbox.orgmode' not in view.scope_name(sel.end()):
+            if 'orgmode.checkbox' not in view.scope_name(sel.end()):
                 continue
             backup.append(sel)
             child = view.extract_scope(sel.end())
@@ -191,7 +217,7 @@ class OrgmodeRecalcCheckboxSummaryCommand(AbstractCheckboxCommand):
         view = self.view
         backup = []
         for sel in view.sel():
-            if 'summary.checkbox.orgmode' not in view.scope_name(sel.end()):
+            if 'orgmode.checkbox.summary' not in view.scope_name(sel.end()):
                 continue
             backup.append(sel)
             summary = view.extract_scope(sel.end())
