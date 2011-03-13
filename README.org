@@ -8,53 +8,88 @@ orgmode for Sublime Text 2
 * Features
   Here's a list of all the features implemented so far:
 
-  - Context sensitive highlighting
+  * Context sensitive highlighting
     - Headlines
-    - Pages
-    - Breaks
+    - Pages. E.g.:
+      --- This is a page marker ---
+    - Breaks. E.g.:
+      ~ This is a break.
     - Tacks
+    - Follow ups. E.g.:
+      -> Lorem ipsum.
+      => Lorem ipsum.
     - Checkboxes
     - Checkbox summaries
     - External links
-    - Inter document links
-  - Context sensitive actions
+    - Inter document links. E.g. {1} {{Context sensitive actions}}
+
+  * Context sensitive actions
     - Toggle checkbox on pressing enter
     - Auto update of checkbox summary on toggle of checkboxes
     - Recalc number of children in checkbox summary on pressing enter
-    - External link opener on pressing enter (e.g. [[http://www.google.de]])
-      (currently only working on OSX)
-    - Jumping between inter document links on pressing enter (e.g. {1})
+    - External link opener on pressing enter
+      (currently only working on OSX and Windows)
+      - Plugin-system including aliases
+      - Plugin: Jira
+        - Normal call: [[jira:PLAYGROUND]]
+        - Alias j: [[j:PLAYGROUND-123]]
+      - Plugin: Crucible code review
+        - Normal call: [[crucible:CR-123]]
+        - Aliases cru and cr: [[cr:CR-123]]
+      - Plugin: FishEye repo incl. opt. changeset
+        - Normal call: [[fisheye:some_repo]]
+        - Normal call: [[fisheye:some_repo/revision_or_tag]]
+        - Aliases fish and fe: [[fe:some_repo/123]]
+      - Plugin: eMail
+        - Create call: [[mailto:ok@ryotic.de]]
+        - Create call with subject: [[mailto:ok@ryotic.de/some subject]]
+    - Jump between inter document links on pressing enter (e.g. {1})
+    - Jump to linked headline on pressing enter (e.g. {{Installation}})
 
 * Installation
 
-** Codebase
-   Clone or copy the contents into a Packages/orgmode folder.
+  * Codebase
+    Clone or copy the contents into a Packages/orgmode folder.
 
-** Key bindings for interaction
-   See "Key bindings for interaction" under "Attachments" below for details.
+  * Key bindings for interaction
+    See {{Key bindings for interaction}} under {{Attachments}} below for details.
 
-** Theme additions for proper syntax highlighting
-   See "Theme additions for proper syntax highlighting" under "Attachments" below for details.
+  * Theme additions for proper syntax highlighting
+    See {{Theme additions for proper syntax highlighting}} under {{Attachments}} below  for details.
 
-* Todo [1/10]
-  - [ ] External link opener on pressing enter [1/3]
+* Todo [0/19]
+  - [ ] External link opener on pressing enter [2/3]
     - [X] on OSX
     - [ ] on Linux
-    - [ ] on Windows
-  - [X] Recalc number of children in checkbox summary on pressing enter.
+    - [X] on Windows
   - [ ] When (un-)checking *all* checkboxes of siblings, toggle parent checkbox.
   - [ ] Either make highlight_code_remarks.py configurable thru view settings so that orgmode can control its regex patterns or fork/extend it to archive an equal goal.
-  - [ ] Export into formatted text file
+  - [ ] Export into formatted text file [0/1]
+    - [ ] Format: Markdown
   - [ ] Automatic export after save into given format if mark found in org file.
-  - [ ] Fix subsequent indents
   - [ ] Fix cursor position after filling checkbox summary on checkbox toggle
   - [ ] Tab trigger "[]" which extends into "[ ] " and updates the summary
   - [ ] Define special block/area in document where time logging can occur. If one changes the status (TODO, WORKING, DONE etc.) this will be written into the log. Ideas for format are welcome!
+  - [ ] If all children don't have checkboxes only show the number of children in the summary
+  - [ ] If the summary ends with "%]" calculate percentage instead of amount
+  - [ ] If multiple checkboxes are in one line only work with the one under the cursor
+  - [ ] If multiple checkbox summaries are in one line only work with the one under the cursor
+  - [ ] If mutliple checkbox summaries are in one line update every one of them independently on updating a child checkbox
+  - [ ] Move key bindings out of readme into its own file
+  - [ ] Move theme additions out of readme into its own file
+  - [ ] Implement external link plugin: eMail [2/3]
+    - [ ] Open call [[email:ok@ryotic.de/inbox/some title]]
+    - [X] Create call [[mailto:ok@ryotic.de]]
+    - [X] Create call with subject [[mailto:ok@ryotic.de/some subject]]
+  - [ ] Pressing return on a TODO chain shall set it to DONE
+  - [ ] ASCII tables.
+  - [ ] Code remark collector. Recursively scans a specified folder for files with given filename pattern for code remarks and shows them as a list. Should be realized with begin and end markers to support later update on pressing enter on either marker.
 
 * Known Issues
   - When creating an empty checkbox summary and hitting an checkbox below the cursor will be placed a little bit to the left. Seems like the selection is being rebuilt incorrectly due to the added chars for the summary.
-  - Subsequent indent of wrapped paragraphs don't respect stars, tacks and checkboxes.
-  
+  - Subsequent indent of wrapped paragraphs don't respect stars, tacks, checkboxes, follow ups etc..
+    -> [[http://sublimetext.userecho.com/feedback/26943-/]]
+
 * External links
   {1} Homepage [[https://bitbucket.org/theblacklion/sublime_orgmode/]]
   {2} Issue tracker [[https://bitbucket.org/theblacklion/sublime_orgmode/issues?status=new&status=open]]
@@ -63,113 +98,135 @@ orgmode for Sublime Text 2
 
 * Attachments
 
-** Key bindings for interaction
-   Put the following into your key bindings file:
+  * Key bindings for interaction
+    Put the following into your key bindings file:
 
-   [code]
-   { "keys": ["enter"], "command": "orgmode_toggle_checkbox", "context":
-     [
-       { "key": "selector", "operator": "equal", "operand": "orgmode.checkbox" }
-     ]
-   },
-   { "keys": ["enter"], "command": "orgmode_recalc_checkbox_summary", "context":
-     [
-       { "key": "selector", "operator": "equal", "operand":  "orgmode.checkbox.summary" }
-     ]
-   },
-   {  "keys": ["enter"], "command": "orgmode_open_link", "con text":
+    [code]
+    { "keys": ["enter"], "command": "orgmode_toggle_checkbox", "context":
       [
-         { "key": "selector", "operator": "equal", "operand":  "orgmode.link" }
+        { "key": "selector", "operator": "equal", "operand": "orgmode.checkbox" }
       ]
-   },
-   {  "keys": ["enter"], "command": "orgmode_cycle_internal_link", "context":
+    },
+    { "keys": ["enter"], "command": "orgmode_recalc_checkbox_summary", "context":
       [
-         { "key": "selector", "operator": "equal", "operand":  "orgmode.link.internal" }
-     ]
-   }
-   [/code]
+        { "key": "selector", "operator": "equal", "operand":  "orgmode.checkbox.summary" }
+      ]
+    },
+    {  "keys": ["enter"], "command": "orgmode_open_link", "con text":
+      [
+        { "key": "selector", "operator": "equal", "operand":  "orgmode.link" }
+      ]
+    },
+    {  "keys": ["enter"], "command": "orgmode_cycle_internal_link", "context":
+      [
+        { "key": "selector", "operator": "equal", "operand":  "orgmode.link.internal" }
+      ]
+    }
+    [/code]
 
-** Theme additions for proper syntax highlighting
-   Put the following into your theme file:
+  * Theme additions for proper syntax highlighting
+    Put the following into your theme file:
 
-   [code]
-   <dict>
-       <key>name</key>
-       <string>orgmode link</string>
-       <key>scope</key>
-       <string>orgmode.link</string>
-       <key>settings</key>
-       <dict>
-         <key>foreground</key>
-         <string>#FB9A4B</string>
-         <key>fontStyle</key>
-         <string>underline</string>
-      </dict>
-   </dict>
-   <dict>
-       <key>name</key>
-       <string>orgmode page</string>
-       <key>scope</key>
-       <string>orgmode.page</string>
-       <key>settings</key>
-       <dict>
-         <key>foreground</key>
-         <string>#FFFFAA</string>
-      </dict>
-   </dict>
-   <dict>
-       <key>name</key>
-       <string>orgmode break</string>
-       <key>scope</key>
-       <string>orgmode.break</string>
-       <key>settings</key>
-       <dict>
-         <key>foreground</key>
-         <string>#FFAAAA</string>
-      </dict>
-   </dict>
-   <dict>
-       <key>name</key>
-       <string>orgmode headline</string>
-       <key>scope</key>
-       <string>orgmode.headline</string>
-       <key>settings</key>
-       <dict>
-         <key>foreground</key>
-         <string>#9EFFFF</string>
-      </dict>
-   </dict>
-   <dict>
-       <key>name</key>
-       <string>orgmode tack</string>
-       <key>scope</key>
-       <string>orgmode.tack</string>
-       <key>settings</key>
-       <dict>
-         <key>foreground</key>
-         <string>#FFFFAA</string>
-      </dict>
-   </dict>
-   <dict>
-       <key>name</key>
-       <string>orgmode checkbox</string>
-       <key>scope</key>
-       <string>orgmode.checkbox</string>
-       <key>settings</key>
-       <dict>
-         <key>foreground</key>
-         <string>#FFFFAA</string>
-      </dict>
-   </dict>
-   <dict>
-       <key>name</key>
-       <string>orgmode checkbox summary</string>
-       <key>scope</key>
-       <string>orgmode.checkbox.summary</string>
-       <key>settings</key>
-       <dict>
-         <key>foreground</key>
-         <string>#FFFFAA</string>
-      </dict>
-   </dict>
-   [/code]
+    [code]
+    <dict>
+        <key>name</key>
+        <string>orgmode link</string>
+        <key>scope</key>
+        <string>orgmode.link</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#FB9A4B</string>
+          <key>fontStyle</key>
+          <string>underline</string>
+       </dict>
+    </dict>
+    <dict>
+        <key>name</key>
+        <string>orgmode page</string>
+        <key>scope</key>
+        <string>orgmode.page</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#FFFFAA</string>
+       </dict>
+    </dict>
+    <dict>
+        <key>name</key>
+        <string>orgmode break</string>
+        <key>scope</key>
+        <string>orgmode.break</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#FFAAAA</string>
+       </dict>
+    </dict>
+    <dict>
+        <key>name</key>
+        <string>orgmode headline</string>
+        <key>scope</key>
+        <string>orgmode.headline</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#9EFFFF</string>
+       </dict>
+    </dict>
+    <dict>
+        <key>name</key>
+        <string>orgmode tack</string>
+        <key>scope</key>
+        <string>orgmode.tack</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#FFFFAA</string>
+       </dict>
+    </dict>
+    <dict>
+        <key>name</key>
+        <string>orgmode follow up</string>
+        <key>scope</key>
+        <string>orgmode.follow_up</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#FFFFAA</string>
+       </dict>
+    </dict>
+    <dict>
+        <key>name</key>
+        <string>orgmode checkbox</string>
+        <key>scope</key>
+        <string>orgmode.checkbox</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#FFFFAA</string>
+       </dict>
+    </dict>
+    <dict>
+        <key>name</key>
+        <string>orgmode checkbox summary</string>
+        <key>scope</key>
+        <string>orgmode.checkbox.summary</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#FFFFAA</string>
+       </dict>
+    </dict>
+    <dict>
+        <key>name</key>
+        <string>orgmode tags</string>
+        <key>scope</key>
+        <string>orgmode.tags</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#AAFFAA</string>
+       </dict>
+    </dict>
+    [/code]

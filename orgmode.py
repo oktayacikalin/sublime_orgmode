@@ -1,19 +1,60 @@
-import os
-import subprocess
+'''
+Settings in Global.sublime-settings are:
+- orgmode.open_link.resolvers: See DEFAULT_OPEN_LINK_RESOLVERS.
+- orgmode.open_link.resolver.abstract.commands: See DEFAULT_OPEN_LINK_COMMANDS in resolver.abstract.
+For more settings see headers of specific resolvers.
+'''
+
+import sys
 import re
 
 import sublime
 import sublime_plugin
 
 
-OPEN_LINK_COMMAND = ['open']
+DEFAULT_OPEN_LINK_RESOLVERS = [
+    'jira',
+    'crucible',
+    'fisheye',
+    'email',
+    'local_file',
+]
+
+
+def find_resolvers():
+    from os.path import splitext
+    from glob import glob
+    path = 'resolver'
+    files = glob('%s/*.py' % path)
+    available_resolvers = dict()
+    for pos, file_ in enumerate(files[:]):
+        name = splitext(file_)[0].replace('/', '.')
+        __import__(name)
+        module = reload(sys.modules[name])
+        if '__init__' in file_ or 'abstract' in file_:
+            continue
+        name = name.split('.').pop()
+        # print name, module
+        available_resolvers[name] = module
+    return available_resolvers
+available_resolvers = find_resolvers()
 
 
 class OrgmodeOpenLinkCommand(sublime_plugin.TextCommand):
-    '''
-    @todo: If the link is a local org-file open it via sublime, otherwise use OPEN_LINK_COMMAND.
-    @todo: Implement mechanisms for Linux and Windows.
-    '''
+
+    def __init__(self, *args, **kwargs):
+        super(OrgmodeOpenLinkCommand, self).__init__(*args, **kwargs)
+        settings = sublime.load_settings('Global.sublime-settings')
+        wanted_resolvers = settings.get('orgmode.open_link.resolvers', DEFAULT_OPEN_LINK_RESOLVERS)
+        self.resolvers = [available_resolvers[name].Resolver(self.view) \
+                          for name in wanted_resolvers]
+
+    def resolve(self, content):
+        for resolver in self.resolvers:
+            result = resolver.resolve(content)
+            if result is not None:
+                return resolver, result
+        return None, None
 
     def run(self, edit):
         view = self.view
@@ -24,15 +65,11 @@ class OrgmodeOpenLinkCommand(sublime_plugin.TextCommand):
             content = view.substr(region)
             if content.startswith('[[') and content.endswith(']]'):
                 content = content[2:-2]
-            content = os.path.expandvars(content)
-            content = os.path.expanduser(content)
-            cmd = OPEN_LINK_COMMAND + [content]
-            process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            stdout, stderr = process.communicate()
-            if stdout:
-                sublime.status_message(stdout)
-            if stderr:
-                sublime.error_message(stderr)
+            resolver, content = self.resolve(content)
+            if content is None:
+                sublime.error_message('Could not resolve link:\n%s' % content)
+                continue
+            resolver.execute(content)
 
 
 class OrgmodeCycleInternalLinkCommand(sublime_plugin.TextCommand):
@@ -45,6 +82,8 @@ class OrgmodeCycleInternalLinkCommand(sublime_plugin.TextCommand):
             return
         region = view.extract_scope(sel.end())
         content = view.substr(region).strip()
+        if content.startswith('{{') and content.endswith('}}'):
+            content = '* %s' % content[2:-2]
         found = self.view.find(content, region.end(), sublime.LITERAL)
         if not found:  # Try wrapping around buffer.
             found = self.view.find(content, 0, sublime.LITERAL)
@@ -52,6 +91,7 @@ class OrgmodeCycleInternalLinkCommand(sublime_plugin.TextCommand):
         if not found or same:
             sublime.status_message('No sibling found for: %s' % content)
             return
+        found = view.extract_scope(found.begin())
         sels.clear()
         sels.add(sublime.Region(found.begin()))
         try:
