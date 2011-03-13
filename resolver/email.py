@@ -32,7 +32,14 @@ class Resolver(AbstractRegexLinkResolver):
             if match['subject']:
                 url += '?subject=%s' % match['subject']
             return url
-        import sublime
-        # TODO Implement email opener here.
-        sublime.error_message('Email opener not implemented yet.')
-        raise NotImplemented()
+        if match['type'] == 'email':
+            return dict(email=match['email'], path=match['subject'])
+
+    def execute(self, content):
+        if type(content) is dict and 'email' in content:
+            import sublime
+            # TODO Implement email opener here.
+            sublime.error_message('Email opener not implemented yet.')
+            raise NotImplemented()
+        else:
+            return super(Resolver, self).execute(content)
