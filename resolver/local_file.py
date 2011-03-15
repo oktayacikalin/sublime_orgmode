@@ -53,25 +53,28 @@ class Resolver(AbstractLinkResolver):
         filepath = os.path.expandvars(filepath)
         filepath = os.path.expanduser(filepath)
 
+        # print filepath
+        match = self.regex.match(filepath)
+        if match:
+            filepath, row, col = match.group('filepath'), match.group('row'), match.group('col')
+            # print filepath, row, col
+        else:
+            row = None
+            col = None
+
         drive, filepath = os.path.splitdrive(filepath)
         if not filepath.startswith('/'):  # If filepath is relative...
             cwd = os.path.dirname(self.view.file_name())
             testfile = os.path.join(cwd, filepath)
             if os.path.exists(testfile):  # See if it exists here...
                 filepath = testfile
-
         filepath = ':'.join([drive, filepath]) if drive else filepath
 
-        # print filepath
-        match = self.regex.match(filepath)
-        if match:
-            filepath, row, col = match.group('filepath'), match.group('row'), match.group('col')
-            # print filepath, row, col
-            if os.path.exists(filepath) and not self.file_is_excluded(filepath):
-                if row: filepath += ':%s' % row
-                if col: filepath += ':%s' % col
-                self.view.window().open_file(filepath, sublime.ENCODED_POSITION)
-                return True
+        if os.path.exists(filepath) and not self.file_is_excluded(filepath):
+            if row: filepath += ':%s' % row
+            if col: filepath += ':%s' % col
+            self.view.window().open_file(filepath, sublime.ENCODED_POSITION)
+            return True
 
         return filepath
 
