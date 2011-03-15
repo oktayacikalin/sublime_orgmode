@@ -89,6 +89,7 @@ orgmode for Sublime Text 2
   - When creating an empty checkbox summary and hitting an checkbox below the cursor will be placed a little bit to the left. Seems like the selection is being rebuilt incorrectly due to the added chars for the summary.
   - Subsequent indent of wrapped paragraphs don't respect stars, tacks, checkboxes, follow ups etc..
     -> [[http://sublimetext.userecho.com/feedback/26943-/]]
+  - Update of checkbox summary should only see children who start with either an asterisk, tack or checkbox. Other things like external links or follow ups should be ignored.
 
 * External links
   {1} Homepage [[https://bitbucket.org/theblacklion/sublime_orgmode/]]
