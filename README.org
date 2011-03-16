@@ -126,7 +126,7 @@ orgmode for Sublime Text 2
     [/code]
 
   * Theme additions for proper syntax highlighting
-    Put the following into your theme file:
+    Put the following into your color scheme (.tmTheme file):
 
     [code]
     <dict>
