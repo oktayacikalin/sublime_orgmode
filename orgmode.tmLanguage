@@ -16,25 +16,25 @@
 			<key>name</key>
 			<string>orgmode.page</string>
 			<key>match</key>
-			<string>^\s*(\-\-\-) .*\n?$</string>
+			<string>^\s*\-\-\- [^\n]*</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>orgmode.break</string>
 			<key>match</key>
-			<string>^\s*(\~)+ .*\n?$</string>
+			<string>^\s*[~]+ [^\n]*</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>orgmode.headline</string>
 			<key>match</key>
-			<string>^\s*(\*)+ [^\[\]:]*</string>
+			<string>^\s*[*]+ [^\[\]:\n]*</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>orgmode.tack</string>
 			<key>match</key>
-			<string>^\s*(\-) </string>
+			<string>^\s*\- </string>
 		</dict>
 		<dict>
 			<key>name</key>
@@ -58,7 +58,7 @@
 			<key>name</key>
 			<string>orgmode.link</string>
 			<key>match</key>
-			<string>\[\[(.+?)\]\]</string>
+			<string>\[\[(.+?)?\]\]</string>
 		</dict>
 		<dict>
 			<key>name</key>
@@ -84,7 +84,7 @@
 			<key>name</key>
 			<string>orgmode.tags</string>
 			<key>match</key>
-			<string>:[\w\d:]+:</string>
+			<string>(^|\s):[\w\d:]+:(\s|$)</string>
 		</dict>
 	</array>
 	<key>scopeName</key>
