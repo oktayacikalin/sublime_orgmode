@@ -115,7 +115,7 @@ orgmode for Sublime Text 2
         { "key": "selector", "operator": "equal", "operand":  "orgmode.checkbox.summary" }
       ]
     },
-    {  "keys": ["enter"], "command": "orgmode_open_link", "con text":
+    {  "keys": ["enter"], "command": "orgmode_open_link", "context":
       [
         { "key": "selector", "operator": "equal", "operand":  "orgmode.link" }
       ]
