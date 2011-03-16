@@ -43,8 +43,10 @@ orgmode for Sublime Text 2
       - Plugin: eMail
         - Create call: [[mailto:ok@ryotic.de]]
         - Create call with subject: [[mailto:ok@ryotic.de/some subject]]
+    - Auto completion of filenames and directories when writing external links to local files
     - Jump between inter document links on pressing enter (e.g. {1})
     - Jump to linked headline on pressing enter (e.g. {{Installation}})
+    - Show an outline of the document on using goto symbol
 
 * Installation
 
