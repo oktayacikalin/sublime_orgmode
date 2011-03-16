@@ -268,3 +268,52 @@ class OrgmodeRecalcCheckboxSummaryCommand(AbstractCheckboxCommand):
         view.sel().clear()
         for region in backup:
             view.sel().add(region)
+
+
+class OrgmodeLinkCompletions(sublime_plugin.EventListener):
+
+    def on_query_completions(self, view, prefix, locations):
+        import os
+        from glob import glob
+        # print 'view =', view
+        # print 'preifx =', prefix
+        # print 'locations =', locations
+        location = locations[0]
+        if not 'orgmode.link' in view.scope_name(location):
+            return []
+        region = view.extract_scope(location)
+        content = view.substr(region)
+        inner_region = region
+        if content.startswith('[[') and content.endswith(']]'):
+            content = content[2:-2]
+            inner_region = sublime.Region(region.begin() + 2, region.end() - 2)
+        if not inner_region.contains(location):
+            return []
+        content = view.substr(sublime.Region(inner_region.begin(), location))
+        content = os.path.expandvars(content)
+        content = os.path.expanduser(content)
+        # print 'region =', region
+        # print 'content =', content
+        path, base = os.path.split(content)
+        # print 'split =', path, base
+        if not len(path):
+            path = os.path.dirname(view.file_name())
+        if not os.path.exists(path):
+            path = os.path.join(os.path.dirname(view.file_name()), path)
+        # print 'path =', path, base
+        pattern = os.path.join(path, '%s*' % base)
+        # print 'pattern =', pattern
+        files = glob(pattern)
+        basename = os.path.basename
+        isdir = os.path.isdir
+        for pos, item in enumerate(files[:]):
+            expr = basename(item)
+            snippet = basename(item)
+            if isdir(item):
+                expr += '/'
+                snippet += '/'
+            files[pos] = (expr, snippet)
+        # print 'files =', files
+        if not files:
+            return [(base + '/', base)]
+        return files
