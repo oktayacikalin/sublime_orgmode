@@ -22,6 +22,8 @@ orgmode for Sublime Text 2
     - Checkbox summaries
     - External links
     - Inter document links. E.g. {1} {{Context sensitive actions}}
+    - Code blocks
+    - Python tracebacks
 
   * Context sensitive actions
     - Toggle checkbox on pressing enter
@@ -47,6 +49,7 @@ orgmode for Sublime Text 2
     - Jump between inter document links on pressing enter (e.g. {1})
     - Jump to linked headline on pressing enter (e.g. {{Installation}})
     - Show an outline of the document on using goto symbol
+    - Open Python file at specific line from Python tracebacks when pressing enter on a filepath
 
 * Installation
 

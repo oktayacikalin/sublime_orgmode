@@ -56,20 +56,54 @@ class OrgmodeOpenLinkCommand(sublime_plugin.TextCommand):
                 return resolver, result
         return None, None
 
+    def is_valid_scope(self, sel):
+        scope_name = self.view.scope_name(sel.end())
+        return 'orgmode.link' in scope_name
+
+    def extract_content(self, region):
+        content = self.view.substr(region)
+        if content.startswith('[[') and content.endswith(']]'):
+            content = content[2:-2]
+        return content
+
     def run(self, edit):
         view = self.view
         for sel in view.sel():
-            if 'orgmode.link' not in view.scope_name(sel.end()):
+            if not self.is_valid_scope(sel):
                 continue
             region = view.extract_scope(sel.end())
-            content = view.substr(region)
-            if content.startswith('[[') and content.endswith(']]'):
-                content = content[2:-2]
+            content = self.extract_content(region)
             resolver, content = self.resolve(content)
             if content is None:
                 sublime.error_message('Could not resolve link:\n%s' % content)
                 continue
             resolver.execute(content)
+
+
+class OrgmodeOpenPythonRefCommand(OrgmodeOpenLinkCommand):
+
+    def __init__(self, *args, **kwargs):
+        super(OrgmodeOpenPythonRefCommand, self).__init__(*args, **kwargs)
+        pattern = r'.+", line (?P<line>\d+), in (?P<symbol>.+)$'
+        self.regex = re.compile(pattern)
+
+    def is_valid_scope(self, sel):
+        scope_name = self.view.scope_name(sel.end())
+        return 'filepath reference orgmode.python.traceback' in scope_name
+
+    def extract_content(self, region):
+        content = self.view.substr(region)
+        outer_region = self.view.extract_scope(region.end() + 1)
+        scope_name = self.view.scope_name(region.end() + 1)
+        # print scope_name
+        if 'reference orgmode.python.traceback' in scope_name:
+            outer_content = self.view.substr(outer_region)
+            # print outer_content
+            match = self.regex.match(outer_content)
+            if match:
+                # print match.groupdict()
+                content += ':%s' % match.group('line')
+        return content
 
 
 class OrgmodeCycleInternalLinkCommand(sublime_plugin.TextCommand):
