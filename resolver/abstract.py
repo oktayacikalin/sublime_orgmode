@@ -1,6 +1,7 @@
 '''
 Settings in Global.sublime-settings are:
 - orgmode.open_link.resolver.abstract.commands: See DEFAULT_OPEN_LINK_COMMANDS.
+- orgmode.open_link.resolver.abstract.arg_list_wrapper: Optional wrapper for e.g. virtualenv.
 '''
 
 import sys
@@ -56,6 +57,11 @@ class AbstractLinkResolver(object):
             sublime.error_message('Could not get link opener command.\nPlatform not yet supported.')
         content = content.encode('utf-8')
         cmd = command + [content]
+        arg_list_wrapper = self.settings.get("orgmode.open_link.resolver.abstract.arg_list_wrapper", [])
+        if arg_list_wrapper:  # NOTE never use shell=True below.
+            cmd = arg_list_wrapper + [' '.join(cmd)]
+            source_filename = self.view.file_name()
+            cmd += ['--origin', source_filename, '--quiet']
         # print '*****'
         # print repr(content), content
         # print repr(cmd)
