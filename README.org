@@ -15,6 +15,7 @@ orgmode for Sublime Text 2
     - Breaks. E.g.:
       ~ This is a break.
     - Tacks
+    - Tags. E.g.: :important:, :one:two:three:
     - Follow ups. E.g.:
       -> Lorem ipsum.
       => Lorem ipsum.
@@ -51,6 +52,27 @@ orgmode for Sublime Text 2
     - Show an outline of the document on using goto symbol
     - Open Python file at specific line from Python tracebacks when pressing enter on a filepath
 
+  * Tab completions
+    - Headlines: "*", "**", "***"
+    - Pages: "p"
+    - Breaks: "b"
+    - Tack: "-"
+    - Tack with unchecked checkbox: "-c"
+    - Tack with checked checkbox: "-cc"
+    - Tack with unchecked checkbox and external link: "-cl"
+    - Tack with TODO: "-ct"
+    - Tack with WORKING: "-cw"
+    - Tack with DONE: "-cd"
+    - Tag: "t"
+    - Additional Tags: ":" (just keep hitting tab for more)
+    - Follow ups: "f"
+    - Sum ups: "ff"
+    - External links: "l"
+    - Inter document links: "i", "ii"
+    - Checkbox unchecked: "c"
+    - Checkbox checked: "cc"
+    - Checkbox summary: "cs"
+
 * Installation
 
   * Codebase
@@ -73,7 +95,9 @@ orgmode for Sublime Text 2
     - [ ] Format: Markdown
   - [ ] Automatic export after save into given format if mark found in org file.
   - [ ] Fix cursor position after filling checkbox summary on checkbox toggle
-  - [ ] Tab trigger "[]" which extends into "[ ] " and updates the summary
+  - [ ] Tab trigger "c" [1/2]
+    - [X] …which extends into "[ ] "
+    - [ ] …and updates the summary
   - [ ] Define special block/area in document where time logging can occur. If one changes the status (TODO, WORKING, DONE etc.) this will be written into the log. Ideas for format are welcome!
   - [ ] If all children don't have checkboxes only show the number of children in the summary
   - [ ] If the summary ends with "%]" calculate percentage instead of amount
