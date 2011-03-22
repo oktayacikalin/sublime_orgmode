@@ -91,7 +91,7 @@
 			<key>name</key>
 			<string>orgmode.tags</string>
 			<key>match</key>
-			<string>(^|\s):[\w\d:]+:(\s|$)</string>
+			<string>(^|\s):[\w\d:]+:</string>
 		</dict>
 		<dict>
 			<key>name</key>
