@@ -17,7 +17,7 @@ DEFAULT_OPEN_LINK_COMMANDS = dict(
     # Found at:
     # - http://frank.zinepal.com/open-a-file-in-the-default-application-using
     # - http://commandwindows.com/tipsandtricks.htm#startcommand
-    windows=['cmd', '/c', 'start'],
+    win32=['cmd', '/c', 'start'],
 
     # Dunno yet - help anyone?
     # linux= FIXME ???
@@ -55,7 +55,8 @@ class AbstractLinkResolver(object):
         command = self.get_link_command()
         if not command:
             sublime.error_message('Could not get link opener command.\nPlatform not yet supported.')
-        content = content.encode('utf-8')
+
+        content = '"%s"' % content.encode('utf-8')
         cmd = command + [content]
         arg_list_wrapper = self.settings.get("orgmode.open_link.resolver.abstract.arg_list_wrapper", [])
         if arg_list_wrapper:  # NOTE never use shell=True below.

@@ -57,8 +57,8 @@
 		<dict>
 			<key>name</key>
 			<string>orgmode.link</string>
-			<key>match</key>
-			<string>\[\[(.+?)?\]\]</string>
+			<key>include</key>
+			<string>#external_link</string>
 		</dict>
 		<dict>
 			<key>name</key>
@@ -73,6 +73,12 @@
 			<string>\{\{(.+?)\}\}</string>
 		</dict>
 		<dict>
+			<key>name</key>
+			<string>orgmode.shell_command</string>
+			<key>include</key>
+			<string>#shell_command</string>
+		</dict>
+		<dict>
 			<key>contentName</key>
 			<string>text source</string>
 			<key>begin</key>
@@ -84,6 +90,10 @@
  				<dict>
 					<key>include</key>
 					<string>#python_exception.reference</string>
+				</dict>
+ 				<dict>
+					<key>include</key>
+					<string>#shell_command</string>
 				</dict>
 			</array>
 		</dict>
@@ -105,6 +115,76 @@
  				<dict>
 					<key>include</key>
 					<string>#python_exception.reference</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>orgmode.table.simple</string>
+			<key>begin</key>
+			<string>\s*(╭─[─┬]*╮\s*)</string>
+			<key>end</key>
+			<string>(^\s*╰─[─┴]*╯\s*)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>border.header</string>
+				</dict>
+			</dict>
+			<key>endCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>border.footer</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>match</key>
+					<string>^\s*├─[─┼]+┤\s*$</string>
+					<key>name</key>
+					<string>border.row.separator</string>
+				</dict>
+				<dict>
+					<key>begin</key>
+					<string>^(\s*│ )</string>
+					<key>end</key>
+					<string>(│\s*)$</string>
+					<key>beginCaptures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>border.row.data.pre.space</string>
+						</dict>
+					</dict>
+					<key>endCaptures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>border.row.data.post.space</string>
+						</dict>
+					</dict>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#table_data_sep</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#external_link</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#table_data</string>
+						</dict>
+					</array>
 				</dict>
 			</array>
 		</dict>
@@ -136,6 +216,34 @@
 					<string>function</string>
 				</dict>
 			</dict>
+		</dict>
+		<key>shell_command</key>
+		<dict>
+			<key>name</key>
+			<string>shell_command orgmode.shell_command</string>
+			<key>match</key>
+			<string>^\s*\$ .*$</string>
+		</dict>
+		<key>external_link</key>
+		<dict>
+			<key>name</key>
+			<string>link orgmode.link</string>
+			<key>match</key>
+			<string>\[\[([^\]]+?)?\]\]</string>
+		</dict>
+		<key>table_data_sep</key>
+		<dict>
+			<key>name</key>
+			<string>border.row.data.separator</string>
+			<key>match</key>
+			<string>│ </string>
+		</dict>
+		<key>table_data</key>
+		<dict>
+			<key>name</key>
+			<string>row.data</string>
+			<key>match</key>
+			<string>[^│]+</string>
 		</dict>
 	</dict>
 	<key>scopeName</key>

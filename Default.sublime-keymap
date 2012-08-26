@@ -1,0 +1,41 @@
+[
+	/* BEGIN: general commands */
+	{ "keys": ["enter"], "command": "orgmode_toggle_checkbox", "context":
+		[
+			{ "key": "selector", "operator": "equal", "operand": "orgmode.checkbox" }
+		]
+	},
+	{ "keys": ["enter"], "command": "orgmode_recalc_checkbox_summary", "context":
+		[
+			{ "key": "selector", "operator": "equal", "operand": "orgmode.checkbox.summary" }
+		]
+	},
+	{ "keys": ["enter"], "command": "orgmode_open_link", "context":
+		[
+			{ "key": "selector", "operator": "equal", "operand": "orgmode.link" }
+		]
+	},
+	{ "keys": ["enter"], "command": "orgmode_open_python_ref", "context":
+		[
+			{ "key": "selector", "operator": "equal", "operand": "orgmode.python.traceback reference filepath" }
+		]
+	},
+	{ "keys": ["enter"], "command": "orgmode_cycle_internal_link", "context":
+		[
+			{ "key": "selector", "operator": "equal", "operand": "orgmode.link.internal" }
+		]
+	},
+	{ "keys": ["ctrl+c"], "command": "orgmode_copy_shell_command", "context":
+		[
+			{ "key": "selector", "operator": "equal", "operand": "orgmode.shell_command" },
+			{ "key": "num_selections", "operator": "equal", "operand": 1 }
+		]
+	},
+	{ "keys": ["ctrl+c"], "command": "orgmode_copy_external_link", "context":
+		[
+			{ "key": "selector", "operator": "equal", "operand": "orgmode.link" },
+			{ "key": "num_selections", "operator": "equal", "operand": 1 }
+		]
+	}
+	/* END: general commands */
+]

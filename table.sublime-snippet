@@ -1,0 +1,9 @@
+<snippet>
+    <content><![CDATA[╭──────┬──────┬──────╮
+│ ${1}col1 │ col2 │ col3 │
+╰──────┴──────┴──────╯
+]]></content>
+    <tabTrigger>table</tabTrigger>
+    <scope>text.orgmode</scope>
+    <description>simple table</description>
+</snippet>

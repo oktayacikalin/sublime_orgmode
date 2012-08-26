@@ -43,6 +43,9 @@ orgmode for Sublime Text 2
         - Normal call: [[fisheye:some_repo]]
         - Normal call: [[fisheye:some_repo/revision_or_tag]]
         - Aliases fish and fe: [[fe:some_repo/123]]
+      - Plugin: TestRail
+        - Normal call: [[testrail:1234]]
+        - Aliases test and t: [[test:1234]]
       - Plugin: eMail
         - Create call: [[mailto:ok@ryotic.de]]
         - Create call with subject: [[mailto:ok@ryotic.de/some subject]]
@@ -79,12 +82,12 @@ orgmode for Sublime Text 2
     Clone or copy the contents into a Packages/orgmode folder.
 
   * Key bindings for interaction
-    See {{Key bindings for interaction}} under {{Attachments}} below for details.
+    See the file [[Default (OSX).sublime-keymap]] for details. Linux and Windows are currently missing. If you are on such a system please send my your best shot on the keymap bindings - thanks!
 
   * Theme additions for proper syntax highlighting
     See {{Theme additions for proper syntax highlighting}} under {{Attachments}} below for details.
 
-* Todo [0/19]
+* Todo [1/21]
   - [ ] External link opener on pressing enter [2/3]
     - [X] on OSX
     - [ ] on Linux
@@ -113,8 +116,12 @@ orgmode for Sublime Text 2
   - [ ] Pressing return on a TODO chain shall set it to DONE
   - [ ] ASCII tables.
   - [ ] Code remark collector. Recursively scans a specified folder for files with given filename pattern for code remarks and shows them as a list. Should be realized with begin and end markers to support later update on pressing enter on either marker.
+  - [X] Copy on shell context without selection should copy everything after the "$ " until the eol into the clipboard.
+  - [ ] Copy on table context without selection should copy the current table row as tab separated values into the clipboard.
+  - [ ] Press tab on external link to grab page title and replace rest of line with it.
 
 * Known Issues
+  - Keymap bindings for Linux and Windows are missing.
   - When creating an empty checkbox summary and hitting an checkbox below the cursor will be placed a little bit to the left. Seems like the selection is being rebuilt incorrectly due to the added chars for the summary.
   - Subsequent indent of wrapped paragraphs don't respect stars, tacks, checkboxes, follow ups etc..
     -> [[http://sublimetext.userecho.com/feedback/26943-/]]
@@ -127,32 +134,6 @@ orgmode for Sublime Text 2
   {4} Org-Mode for Emacs [[http://orgmode.org/]]
 
 * Attachments
-
-  * Key bindings for interaction
-    Put the following into your key bindings file:
-
-    [code]
-    { "keys": ["enter"], "command": "orgmode_toggle_checkbox", "context":
-      [
-        { "key": "selector", "operator": "equal", "operand": "orgmode.checkbox" }
-      ]
-    },
-    { "keys": ["enter"], "command": "orgmode_recalc_checkbox_summary", "context":
-      [
-        { "key": "selector", "operator": "equal", "operand":  "orgmode.checkbox.summary" }
-      ]
-    },
-    {  "keys": ["enter"], "command": "orgmode_open_link", "context":
-      [
-        { "key": "selector", "operator": "equal", "operand":  "orgmode.link" }
-      ]
-    },
-    {  "keys": ["enter"], "command": "orgmode_cycle_internal_link", "context":
-      [
-        { "key": "selector", "operator": "equal", "operand":  "orgmode.link.internal" }
-      ]
-    }
-    [/code]
 
   * Theme additions for proper syntax highlighting
     Put the following into your color scheme (.tmTheme file):

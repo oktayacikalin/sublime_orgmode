@@ -8,5 +8,6 @@
     "line_numbers": false,
     "save_on_focus_lost": true,
     "rulers": [80],
-    "gutter": true
+    "gutter": true,
+    "tab_completion": false
 }

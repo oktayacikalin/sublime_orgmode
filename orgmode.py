@@ -5,7 +5,6 @@ Settings in Global.sublime-settings are:
 For more settings see headers of specific resolvers.
 '''
 
-import sys
 import re
 
 import sublime
@@ -16,24 +15,29 @@ DEFAULT_OPEN_LINK_RESOLVERS = [
     'jira',
     'crucible',
     'fisheye',
+    'testrail',
     'email',
     'local_file',
 ]
 
 
 def find_resolvers():
-    from os.path import splitext
+    from os.path import splitext, split
     from glob import glob
     path = 'resolver'
     files = glob('%s/*.py' % path)
     available_resolvers = dict()
     for pos, file_ in enumerate(files[:]):
-        name = splitext(file_)[0].replace('/', '.')
-        __import__(name)
-        module = reload(sys.modules[name])
+        name = splitext(file_)[0]
+        patharr = split(name)
+        module, name = '.'.join(patharr), patharr[-1:]
+        # print 'module =', module, 'name =', name, 'patharr =', patharr
+        module = __import__(module, globals(), locals(), name)
+        module = reload(module)
+
         if '__init__' in file_ or 'abstract' in file_:
             continue
-        name = name.split('.').pop()
+        name = name[0]
         # print name, module
         available_resolvers[name] = module
     return available_resolvers
@@ -329,7 +333,7 @@ class OrgmodeLinkCompletions(sublime_plugin.EventListener):
         # print 'region =', region
         # print 'content =', content
         path, base = os.path.split(content)
-        # print 'split =', path, base
+        # print 'split =', repr(path), repr(base)
         if not len(path):
             path = os.path.dirname(view.file_name())
         if not os.path.exists(path):
@@ -351,3 +355,33 @@ class OrgmodeLinkCompletions(sublime_plugin.EventListener):
         if not files:
             return [(base + '/', base)]
         return files
+
+
+class OrgmodeCopyShellCommandCommand(sublime_plugin.TextCommand):
+
+    def run(self, edit):
+        view = self.view
+        sels = view.sel()
+        sel = sels[0]
+        if sel.empty():
+            region = view.extract_scope(sel.end())
+            content = view.substr(region)
+            pos = content.index('$ ')
+            region = sublime.Region(region.begin() + pos + 2, region.end())
+            sels.clear()
+            sels.add(region)
+        view.run_command('copy')
+
+
+class OrgmodeCopyExternalLinkCommand(sublime_plugin.TextCommand):
+
+    def run(self, edit):
+        view = self.view
+        sels = view.sel()
+        sel = sels[0]
+        if sel.empty():
+            region = view.extract_scope(sel.end())
+            region = sublime.Region(region.begin() + 2, region.end() - 2)
+            sels.clear()
+            sels.add(region)
+        view.run_command('copy')
